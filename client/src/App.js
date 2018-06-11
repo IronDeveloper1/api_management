@@ -96,25 +96,66 @@ class ContactDetails extends Component {
   }
 }
 
+class DeleteContact extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(event) {
+    event.preventDefault();
+    this.props.onDelete();
+  }
+
+  render() {
+    return(
+      <a href='' onClick={this.handleClick}>Delete</a>
+    );
+  }
+
+}
+
 class ContactPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {contact: {name:'',numbers: []}};
+    this.handleDelete = this.handleDelete.bind(this);
+    this.state = {
+      contact: {
+        _id: '',
+        name: '',
+        numbers: []
+      },
+      redirect: false
+    };
+  }
+
+  handleDelete() {
+    fetch('/contacts/' + this.state.contact._id, {
+      method: 'DELETE'
+    }).then( (res) => {
+      this.setState( {redirect: true});
+    })
   }
 
   componentDidMount() {
     fetch('/contacts/' + this.props.match.params.id)
     .then(res => res.json())
-    .then(contact => this.setState({ contact }));
+    .then(contact => this.setState({ contact: contact }));
   }
 
   render() {
+    const redirect = this.state.redirect;
     return (
       <div>
         <Header text="Contact" />
         <ContactDetails name={this.state.contact.name} />
         <ContactNumberList numbers={this.state.contact.numbers} />
+        <Link to={'/edit/' + this.state.contact._id}>Edit</Link> | <DeleteContact id={this.state.contact._id} onDelete={this.handleDelete} />
+        <br />
         <Link to={`/`}>Back</Link>
+        {redirect &&
+          <Redirect to="/" />
+        }
       </div>
     );
   }
@@ -124,11 +165,13 @@ class AddContactPage extends Component {
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = {
+      redirect: false
+    };
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    const data = JSON.stringify(new FormData(event.target));
 
     fetch('/contacts', {
       method: 'POST',
@@ -136,35 +179,100 @@ class AddContactPage extends Component {
         Accept: 'application/json', 'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: 'Test',
-        numbers: [
-          {number: '5678', description: 'mobile', classification: 'OFFICAL'}
-        ]
+        name: this.name.value,
+        numbers: [{
+          number: this.number.value,
+          description: this.description.value,
+          classification: this.classification.value
+        }]
       }),
+    }).then( (res) => {
+      this.setState( {redirect: true});
     })
   }
 
   render() {
+    const {redirect} = this.state;
     return (
       <div>
         <Header text="Add new contact" />
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="name">Name</label>
-          <input id="name" name="name" type="text" />
+          <input ref={(ref) => {this.name = ref}} id="name" name="name" type="text" defaultValue="" />
 
           <label htmlFor="numbers[0].number">Number</label>
-          <input id="numbers[0].number" name="numbers[0].number" type="text" />
+          <input ref={(ref) => {this.number = ref}} id="numbers[0].number" name="numbers[0].number" type="text" defaultValue="" />
 
           <label htmlFor="numbers[0].description">Description</label>
-          <input id="numbers[0].description" name="numbers[0].description" type="text" />
+          <input ref={(ref) => {this.description = ref}} id="numbers[0].description" name="numbers[0].description" type="text" defaultValue="" />
 
           <label htmlFor="numbers[0].classification">Classification</label>
-          <input id="numbers[0].classification" name="numbers[0].classification" type="text" />
+          <select type="dropdown" ref={(ref) => {this.classification = ref}} id="numbers[0].classification" name="numbers[0].classification" defaultValue={"OFFICIAL"}>
+            <option value="OFFICIAL">OFFICIAL</option>
+            <option value="SECRET">SECRET</option>
+            <option value="TOP SECRET">TOP SECRET</option>
+          </select>
 
           <button type="submit">Add contact</button>
 
         </form>
         <Link to={`/`}>Back</Link>
+        {redirect && (
+          <Redirect to = {"/"} />
+        )}
+      </div>
+    );
+  }
+}
+
+class EditContactPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      contact: {
+        _id: '',
+        name: '',
+        numbers: []
+      },
+      redirect: false
+    };
+  }
+
+  componentDidMount() {
+    fetch('/contacts/' + this.props.match.params.id)
+    .then(res => res.json())
+    .then(contact => this.setState({ contact: contact }));
+  }
+
+  render() {
+    const {redirect} = this.state;
+    return (
+      <div>
+        <Header text="Edit contact" />
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="name">Name</label>
+          <input ref={(ref) => {this.name = ref}} id="name" name="name" type="text" value={this.state.contact.name} />
+          {/* Need to use numbers.map here I think */}
+          <label htmlFor="numbers[0].number">Number</label>
+          <input ref={(ref) => {this.number = ref}} id="numbers[0].number" name="numbers[0].number" type="text" value={this.state.contact.numbers[0].number} />
+
+          <label htmlFor="numbers[0].description">Description</label>
+          <input ref={(ref) => {this.description = ref}} id="numbers[0].description" name="numbers[0].description" type="text" value={this.state.contact.numbers[0].description} />
+
+          <label htmlFor="numbers[0].classification">Classification</label>
+          <select type="dropdown" ref={(ref) => {this.classification = ref}} id="numbers[0].classification" name="numbers[0].classification" value={this.state.contact.numbers[0].classification} defaultValue={"OFFICIAL"}>
+            <option value="OFFICIAL">OFFICIAL</option>
+            <option value="SECRET">SECRET</option>
+            <option value="TOP SECRET">TOP SECRET</option>
+          </select>
+
+          <button type="submit">Update contact</button>
+
+        </form>
+        <Link to={`/`}>Back</Link>
+        {redirect && (
+          <Redirect to = {"/"} />
+        )}
       </div>
     );
   }
@@ -180,6 +288,7 @@ class App extends Component {
             <Route exact path="/" component={HomePage} />
             <Route path="/contact/:id" component={ContactPage} />
             <Route exact path="/add" component={AddContactPage} />
+            <Route path="/edit/:id" component={EditContactPage} />
           </Switch>
         </div>
       </Router>

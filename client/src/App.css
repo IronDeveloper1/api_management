@@ -32,3 +32,16 @@ ul {
   list-style-position: inside;
   padding-left: 0;
 }
+
+.numberGroup {
+  padding-left:10%;
+  overflow: hidden;
+}
+
+.numberGroup button {
+  float: right;
+}
+
+.numberGroup div {
+  /* display: inline; */
+}

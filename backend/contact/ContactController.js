@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
     },
     (err, contact) => {
         if (err) {
-            return res.status(500).send("There was a porblem adding the information to the database.");
+            return res.status(500).send("There was a problem adding the information to the database.");
         }
         res.status(200).send(contact);
     });
@@ -38,7 +38,7 @@ router.get('/', (req, res) => {
 
     Contact.find({}, (err, contacts) => {
         if (err) {
-            return res.status(500).send("There was a problem finding the users.");
+            return res.status(500).send("There was a problem finding the contacts.");
         }
         res.status(200).send(contacts);
     });

@@ -3,6 +3,7 @@ import {
   Link,
   Redirect
 } from 'react-router-dom';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 
 class Header extends Component {
     render() {
@@ -52,7 +53,7 @@ class ContactNumberListItem extends Component {
   
     render() {
       return(
-        <a href='' onClick={this.handleClick}>Delete</a>
+        <a style={{color: 'white'}} href='' onClick={this.handleClick}>Delete</a>
       );
     }
   
@@ -93,9 +94,12 @@ class ViewContactPage extends Component {
           <Header text="Contact" />
           <ContactDetails name={this.state.contact.name} />
           <ContactNumberList numbers={this.state.contact.numbers} />
-          <Link to={'/edit/' + this.state.contact._id}>Edit</Link> | <DeleteContact id={this.state.contact._id} onDelete={this.handleDelete} />
+          <ButtonToolbar>
+            <Button bsStyle="primary"><Link to={'/edit/' + this.state.contact._id} style={{color: 'white'}}>Edit</Link></Button>
+            <Button bsStyle="danger"><DeleteContact id={this.state.contact._id} onDelete={this.handleDelete} /></Button>
+          </ButtonToolbar>
           <br />
-          <Link to={`/`}>Back</Link>
+          <Button bsStyle="link"><Link to={`/`}>Back</Link></Button>
           {redirect &&
             <Redirect to="/" />
           }

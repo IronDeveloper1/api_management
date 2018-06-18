@@ -6,6 +6,7 @@ import {
   Switch
 } from 'react-router-dom';
 import './App.css';
+import { Button } from 'react-bootstrap';
 import AddContactPage from './components/Add';
 import EditContactPage from './components/Edit';
 import ViewContactPage from './components/View';
@@ -21,7 +22,7 @@ class Header extends Component {
 class AddContactLinkBar extends Component {
   render() {
     return(
-      <Link to={`/add`}>Add New Contact</Link>
+      <Button bsStyle="link"><Link to={`/add`}>+ Add New Contact</Link></Button>
     );
   }
 }

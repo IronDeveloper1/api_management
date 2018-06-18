@@ -3,6 +3,7 @@ import {
   Link,
   Redirect
 } from 'react-router-dom';
+import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
 
 class Header extends Component {
     render() {
@@ -15,20 +16,42 @@ class Header extends Component {
 class NumberFormItem extends Component {
     render() {
       return (
-        <div>
-          <label htmlFor={"numbers[" + this.props.index + "].number"}>Number</label>
-          <input ref={(ref) => {this.number = ref}} id={"numbers[" + this.props.index + "].number"} name="number" type="text" value={this.props.number.number} onChange={this.props.handleChange}/>
-          
-          <label htmlFor={"numbers[" + this.props.index + "].description"}>Description</label>
-          <input ref={(ref) => {this.description = ref}} id={"numbers[" + this.props.index + "].description"} name="description" type="text" value={this.props.number.description} onChange={this.props.handleChange}/>
-  
-          <label htmlFor={"numbers[" + this.props.index + "].classification"}>Classification</label>
-          <select type="dropdown" ref={(ref) => {this.classification = ref}} id={"numbers[" + this.props.index + "].classification"} name="classification" value={this.props.number.classification} onChange={this.props.handleChange}>
+        <div className="numberGroup">
+        <FormGroup controlId={"numbers[" + this.props.index + "].number"}>
+          <ControlLabel>Number</ControlLabel>
+          <FormControl
+            id={"numbers[" + this.props.index + "].number"}
+            name="number"
+            type="text"
+            value={this.props.number.number}
+            onChange={this.props.handleChange}
+          />
+        </FormGroup>
+        <FormGroup controlId={"numbers[" + this.props.index + "].description"}>
+          <ControlLabel>Description</ControlLabel>
+          <FormControl
+            id={"numbers[" + this.props.index + "].description"}
+            name="description"
+            type="text"
+            value={this.props.number.description}
+            onChange={this.props.handleChange}
+          />
+        </FormGroup>
+        <FormGroup controlId={"numbers[" + this.props.index + "].classification"}>
+          <ControlLabel>Classification</ControlLabel>
+          <FormControl
+            componentClass="select"
+            id={"numbers[" + this.props.index + "].classification"}
+            name="classification"
+            value={this.props.number.classification}
+            onChange={this.props.handleChange}
+          >
             <option value="OFFICIAL">OFFICIAL</option>
             <option value="SECRET">SECRET</option>
             <option value="TOP SECRET">TOP SECRET</option>
-          </select>
-          <button type="button" onClick={this.props.handleRemoveNumber}>Remove</button>
+          </FormControl>
+        </FormGroup>
+          <Button bsStyle="danger" onClick={this.props.handleRemoveNumber}>Remove</Button>
         </div>
       );
     }
@@ -109,21 +132,34 @@ class NumberFormItem extends Component {
       return (
         <div>
           <Header text="Edit contact" />
-          <form onSubmit={this.handleSubmit}>
-            <label htmlFor="name">Name</label>
-            <input ref={(ref) => {this.name = ref}} id="name" name="name" type="text" value={this.state.contact.name} onChange={this.handleNameChange}/>
+          <Form>
+            <FormGroup controlId="name">
+              <ControlLabel>Name</ControlLabel>
+              <FormControl
+                id="name"
+                name="name"
+                type="text"
+                value={this.state.contact.name}
+                onChange={this.handleNameChange}
+              />
+            </FormGroup>
             {this.state.contact.numbers.map((number, index) => 
-              <NumberFormItem key={index}
-                            number={number} 
-                            index={index} 
-                            handleChange={(event) => this.handleNumberChange(index, event)}
-                            handleRemoveNumber={(event) => this.handleRemoveNumber(index, event)} />
+              <NumberFormItem 
+                key={index}
+                number={number} 
+                index={index} 
+                handleChange={(event) => this.handleNumberChange(index, event)}
+                handleRemoveNumber={(event) => this.handleRemoveNumber(index, event)}
+              />
             )}
-            <button type="button" onClick={this.handleAddNumber}>Add number</button><br />
-            <button type="submit" onClick={this.handleSubmit}>Update contact</button>
-          </form>
-          <br />
-          <Link to={`/view/` + this.state.contact._id}>Back</Link>
+            <ButtonToolbar className="add-number-btn-toolbar">
+              <Button bsStyle="primary" onClick={this.handleAddNumber}>Add number</Button>
+            </ButtonToolbar>
+            <ButtonToolbar className="save-btn-toolbar">
+              <Button bsStyle="link"><Link to={`/view/` + this.state.contact._id}>Back</Link></Button>
+              <Button bsStyle="success" onClick={this.handleSubmit}>Save contact</Button>
+            </ButtonToolbar>
+          </Form>
           {redirect && (
             <Redirect to = {"/view/" + this.state.contact._id} />
           )}

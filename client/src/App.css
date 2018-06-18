@@ -1,5 +1,7 @@
 .App {
   /* text-align: center; */
+  padding-left: 2.5%;
+  padding-right: 2.5%;
 }
 
 .App-logo {
@@ -34,7 +36,8 @@ ul {
 }
 
 .numberGroup {
-  padding-left:10%;
+  padding-left: 2.5%;
+  padding-right: 2.5%;
   overflow: hidden;
 }
 
@@ -42,6 +45,28 @@ ul {
   float: right;
 }
 
-.numberGroup div {
-  /* display: inline; */
+.add-number-btn-toolbar {
+  padding-left: 2.5%;
 }
+
+.save-btn-toolbar {
+  float: right;
+  overflow: hidden;
+  padding-bottom: 2.5%;
+}
+
+.badge-primary {
+  background-color: #337ab7;
+}
+
+.badge-warning {
+  background-color: #f0ad4e;
+}
+
+.badge-danger {
+  background-color: #d9534f;
+}
+
+/* h4 .badge {
+  float: right;
+} */

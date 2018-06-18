@@ -16,7 +16,7 @@ class Header extends Component {
 class NumberFormItem extends Component {
     render() {
       return (
-        <div class="numberGroup">
+        <div className="numberGroup">
         <FormGroup controlId={"numbers[" + this.props.index + "].number"}>
           <ControlLabel>Number</ControlLabel>
           <FormControl
@@ -51,18 +51,6 @@ class NumberFormItem extends Component {
             <option value="TOP SECRET">TOP SECRET</option>
           </FormControl>
         </FormGroup>
-          {/* <label htmlFor={"numbers[" + this.props.index + "].number"}>Number</label>
-          <input ref={(ref) => {this.number = ref}} id={"numbers[" + this.props.index + "].number"} name="number" type="text" value={this.props.number.number} onChange={this.props.handleChange}/>
-          
-          <label htmlFor={"numbers[" + this.props.index + "].description"}>Description</label>
-          <input ref={(ref) => {this.description = ref}} id={"numbers[" + this.props.index + "].description"} name="description" type="text" value={this.props.number.description} onChange={this.props.handleChange}/>
-  
-          <label htmlFor={"numbers[" + this.props.index + "].classification"}>Classification</label>
-          <select type="dropdown" ref={(ref) => {this.classification = ref}} id={"numbers[" + this.props.index + "].classification"} name="classification" value={this.props.number.classification} onChange={this.props.handleChange}>
-            <option value="OFFICIAL">OFFICIAL</option>
-            <option value="SECRET">SECRET</option>
-            <option value="TOP SECRET">TOP SECRET</option>
-          </select> */}
           <Button bsStyle="danger" onClick={this.props.handleRemoveNumber}>Remove</Button>
         </div>
       );
@@ -164,15 +152,14 @@ class NumberFormItem extends Component {
                 handleRemoveNumber={(event) => this.handleRemoveNumber(index, event)}
               />
             )}
-            <ButtonToolbar>
+            <ButtonToolbar className="add-number-btn-toolbar">
               <Button bsStyle="primary" onClick={this.handleAddNumber}>Add number</Button>
             </ButtonToolbar>
-            <ButtonToolbar>
-              <Button bsStyle="success" onClick={this.handleSubmit}>Update contact</Button>
+            <ButtonToolbar className="save-btn-toolbar">
+              <Button bsStyle="link"><Link to={`/view/` + this.state.contact._id}>Back</Link></Button>
+              <Button bsStyle="success" onClick={this.handleSubmit}>Save contact</Button>
             </ButtonToolbar>
           </Form>
-          <br />
-          <Link to={`/view/` + this.state.contact._id}>Back</Link>
           {redirect && (
             <Redirect to = {"/view/" + this.state.contact._id} />
           )}

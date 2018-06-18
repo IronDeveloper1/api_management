@@ -1,0 +1,7 @@
+FROM node:latest
+WORKDIR /app
+COPY packages/backend ./packages/backend
+CMD ["npm", "install"]
+EXPOSE 3001
+EXPOSE 27017
+CMD ["npm","--prefix", "packages/backend ", "start"]

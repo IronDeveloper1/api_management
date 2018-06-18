@@ -1,6 +1,7 @@
 FROM node:latest
 WORKDIR /app
-COPY packages/client ./packages/client
-CMD ["npm", "install"]
+ENV NODE_PATH ./node_modules
+COPY packages/client/ .
+RUN npm install
 EXPOSE 3000
-CMD ["npm","--prefix", "packages/client ", "start"]
+CMD ["npm", "start"]

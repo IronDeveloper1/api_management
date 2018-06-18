@@ -41,7 +41,7 @@ router.get('/', (req, res) => {
             return res.status(500).send("There was a problem finding the contacts.");
         }
         res.status(200).send(contacts);
-    });
+    }).sort({ name: 'asc'});
 });
 
 // GET - Returns a single Contact from the database

@@ -40,7 +40,44 @@ router.get('/', (req, res) => {
         if (err) {
             return res.status(500).send("There was a problem finding the contacts.");
         }
-        res.status(200).send(contacts);
+
+        let newContacts = [];
+
+        if(req.query.classification) {
+            if(req.query.classification === 'TOP SECRET') {
+                // Return all contacts
+                res.status(200).send(contacts);
+            } else if(req.query.classification === 'SECRET') {
+
+                contacts.forEach( (contact) => {
+                    let newContact = filterContactNumbers(contact, req.query.classification);
+
+                    if (newContact !== null) {
+                        newContacts.push(newContact);
+                    }
+                });
+
+                res.status(200).send(newContacts);
+
+            } else if(req.query.classification === 'OFFICIAL') {
+
+                contacts.forEach( (contact) => {
+                    let newContact = filterContactNumbers(contact, req.query.classification);
+
+                    if (newContact !== null) {
+                        newContacts.push(newContact);
+                    }
+                });
+
+                res.status(200).send(newContacts);
+
+            } else {
+                res.status(400).send("Unknown classification.");
+            }
+
+        } else {
+            res.status(200).send(contacts);
+        }
     }).sort({ name: 'asc'});
 });
 
@@ -51,7 +88,24 @@ router.get('/:id', (req, res) => {
         if (err) {
             return res.status(500).send("There was a problem finding the contact.");
         }
-        res.status(200).send(contact);
+
+        if(req.query.classification) {
+
+            if(req.query.classification === 'TOP SECRET' || 'SECRET' || 'OFFICIAL') {
+                let newContact = filterContactNumbers(contact, req.query.classification);
+
+                if (newContact !== null) {
+                    res.status(200).send(newContact);
+                } else {
+                    // Don't return a contact with no numbers
+                    res.status(404).send("Contact not found.")
+                }
+            } else {
+                res.status(400).send("Unknown classification.");
+            }
+        } else {
+            res.status(200).send(contact);
+        }
     });
 });
 
@@ -65,5 +119,54 @@ router.delete('/:id', (req, res) => {
         res.status(200).send("Contact " + contact.name + " was deleted.");
     });
 });
+
+function filterContactNumbers(contact, classification) {
+    if(classification === 'TOP SECRET') {
+        // Return all numbers
+        return contact;
+    } else if(classification === 'SECRET') {
+        // Only return SECRET and OFFICIAL
+        let newContact = {
+            _id: contact._id,
+            name: contact.name,
+            numbers: []
+        };
+
+        contact.numbers.forEach( (number) => {
+            if (number.classification !== 'TOP SECRET') {
+                newContact.numbers.push(number);
+            }
+        });
+
+        if (newContact.numbers.length === 0) {
+            return null;
+        } else {
+            return newContact;
+        }
+
+    } else if(classification === 'OFFICIAL') {
+        // Only return OFFICIAL
+        let newContact = {
+            _id: contact._id,
+            name: contact.name,
+            numbers: []
+        };
+
+        contact.numbers.forEach( (number) => {
+            if (number.classification === 'OFFICIAL') {
+                newContact.numbers.push(number);
+            }
+        });
+
+        if (newContact.numbers.length === 0) {
+            return null;
+        } else {
+            return newContact;
+        }
+    } else {
+        // Unknown classification
+        return null;
+    }
+};
 
 module.exports = router;

@@ -11,6 +11,10 @@ import AddContactPage from './components/Add';
 import EditContactPage from './components/Edit';
 import ViewContactPage from './components/View';
 
+// From ../public/config.js
+const apiUrl = window.apiUrl;
+const apiKey = window.apiKey;
+
 class Header extends Component {
   render() {
     return (
@@ -55,7 +59,12 @@ class HomePage extends Component {
   }
 
   componentDidMount() {
-    fetch('/contacts')
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json', 'Content-Type': 'application/json', apikey: apiKey
+      }
+    })
       .then(res => res.json())
       .then(contacts => this.setState({ contacts }));
   }
@@ -63,7 +72,7 @@ class HomePage extends Component {
   render() {
     return (
       <div>
-        <Header text="PhoneBook" />
+        <Header text="HS PhoneBook" />
         <AddContactLinkBar />
         <ContactList contacts={this.state.contacts}/>
       </div>

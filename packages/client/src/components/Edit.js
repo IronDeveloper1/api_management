@@ -5,6 +5,10 @@ import {
 } from 'react-router-dom';
 import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
 
+// From ../public/config.js
+const apiUrl = window.apiUrl;
+const apiKey = window.apiKey;
+
 class Header extends Component {
     render() {
       return (
@@ -110,10 +114,10 @@ class NumberFormItem extends Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        fetch('/contacts/' + this.state.contact._id, {
+        fetch(apiUrl + '/' + this.state.contact._id, {
             method: 'PUT',
             headers: {
-              Accept: 'application/json', 'Content-Type': 'application/json',
+              Accept: 'application/json', 'Content-Type': 'application/json', apikey: apiKey
             },
             body: JSON.stringify(this.state.contact),
           }).then( (res) => {
@@ -122,7 +126,12 @@ class NumberFormItem extends Component {
     }
   
     componentDidMount() {
-      fetch('/contacts/' + this.props.match.params.id)
+      fetch(apiUrl + '/' + this.props.match.params.id, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json', 'Content-Type': 'application/json', apikey: apiKey
+        }
+      })
       .then(res => res.json())
       .then(contact => this.setState({ contact: contact }));
     }

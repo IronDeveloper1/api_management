@@ -18,6 +18,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfile-backend-api
+        environment:
+            - DB_URI=mongodb://mongodb/phonebook
         volumes:
             - /app/packages/backend/node_modules   
         ports: 

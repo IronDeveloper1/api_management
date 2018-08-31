@@ -1,5 +1,6 @@
-var mongoose = require('mongoose')
-var mongoUrl = "mongodb://mongodb/phonebook"
+var mongoose = require('mongoose');
+var mongoUrl = process.env.DB_URI;
+//var mongoUrl = "mongodb://127.0.0.1:27017/phonebook"
 
 var connectWithRetry = function() {
   return mongoose.connect(mongoUrl, function(err) {

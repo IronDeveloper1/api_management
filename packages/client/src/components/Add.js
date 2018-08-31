@@ -5,6 +5,10 @@ import {
 } from 'react-router-dom';
 import { Button, ButtonToolbar, ControlLabel, Form, FormControl, FormGroup } from 'react-bootstrap';
 
+// From ../public/config.js
+const apiUrl = window.apiUrl;
+const apiKey = window.apiKey;
+
 class Header extends Component {
     render() {
       return (
@@ -115,12 +119,12 @@ class NumberFormItem extends Component {
     handleSubmit(event) {
         event.preventDefault();
 
-        fetch('/contacts', {
+        fetch(apiUrl, {
             method: 'POST',
             headers: {
-              Accept: 'application/json', 'Content-Type': 'application/json',
+              Accept: 'application/json', 'Content-Type': 'application/json', apikey: apiKey
             },
-            body: JSON.stringify(this.state.contact),
+            body: JSON.stringify(this.state.contact)
           })
           .then( res => res.json())
           .then( (data) => {

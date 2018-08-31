@@ -5,6 +5,10 @@ import {
 } from 'react-router-dom';
 import { Badge, Button, ButtonToolbar, ListGroup, ListGroupItem } from 'react-bootstrap';
 
+// From ../public/config.js
+const apiUrl = window.apiUrl;
+const apiKey = window.apiKey;
+
 function getBadgeColor(classification) {
   switch(classification) {
     case "OFFICIAL":
@@ -96,15 +100,23 @@ class ViewContactPage extends Component {
     }
   
     handleDelete() {
-      fetch('/contacts/' + this.state.contact._id, {
-        method: 'DELETE'
+      fetch(apiUrl + '/' + this.state.contact._id, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json', 'Content-Type': 'application/json', apikey: apiKey
+        }
       }).then( (res) => {
         this.setState( {redirect: true});
       })
     }
   
     componentDidMount() {
-      fetch('/contacts/' + this.props.match.params.id)
+      fetch(apiUrl + '/' + this.props.match.params.id, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json', 'Content-Type': 'application/json', apikey: apiKey
+        }
+      })
       .then(res => res.json())
       .then(contact => this.setState({ contact: contact }));
     }
